@@ -1,5 +1,5 @@
 '''
-Handles card provisioning to map a NFC card's UUID to launch commands locally
+Handles card provisioning to map a NFC card's UID to launch commands locally
 via a toml configuration file. Also launches the editor to create card art.
 '''
 import os

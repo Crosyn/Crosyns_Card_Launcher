@@ -47,8 +47,8 @@ Crosyn's Note: Yeah, I used A.I. to help with a large part of this project. if y
 ## 🏁 Getting Started
 
 ### Prerequisites
-*   **Python:** Python 3.11 or higher is recommended to take advantage of native `tomllib` support[cite: 1, 3, 8].
-*   **Hardware:** A PC/SC compliant USB NFC Reader (such as the WCR330)[cite: 8].
+*   **Python:** Python 3.11 or higher is recommended to take advantage of native `tomllib` support.
+*   **Hardware:** A PC/SC compliant USB NFC Reader (such as the WCR330).
 *   **Media:** Unformatted or formatted NFC cards, tags, or stickers.
 
 ### Installation
@@ -70,19 +70,19 @@ Crosyn's Note: Yeah, I used A.I. to help with a large part of this project. if y
     ```
     Or just double click run_gui.pyw
 3.  **Provision your first card:** 
-    *   Click the **Provision New Card** button in the launcher interface[cite: 6]. This will pause the background listener and open the provisioner[cite: 6].
-    *   Tap a blank NFC card onto your reader[cite: 8].
-    *   Select the Steam game you want to assign to the card from the visual grid and click **Assign**[cite: 8].
-4.  **Tap to Play:** Once the provisioner closes, the system will automatically resume listening for cards[cite: 6]. With the app running (or minimized to your system tray), tap your newly provisioned card to the reader to launch your game!
+    *   Click the **Provision New Card** button in the launcher interface. This will pause the background listener and open the provisioner.
+    *   Tap a blank NFC card onto your reader.
+    *   Select the Steam game you want to assign to the card from the visual grid and click **Assign**.
+4.  **Tap to Play:** Once the provisioner closes, the system will automatically resume listening for cards. With the app running (or minimized to your system tray), tap your newly provisioned card to the reader to launch your game!
 
 ## 🎨 Creating Physical Card Art
 
-If you want your physical NFC cards to match your digital library, the launcher includes a built-in Art Editor to help you format images for printing[cite: 1]. 
+If you want your physical NFC cards to match your digital library, the launcher includes a built-in Art Editor to help you format images for printing. 
 
-1. **Open the Provisioner:** Launch the provisioning tool from the main menu or GUI[cite: 5, 6].
-2. **Launch the Editor:** Right-click on any game in the visual grid and select **🎨 Create Card Art**[cite: 8].
-3. **Design:** The editor allows you to overlay the official Steam capsule art onto custom backgrounds, adjust padding and border colors, and tweak the contrast or zoom to fit your style[cite: 1]. 
-4. **Export:** Once you are happy with the layout, click **Export Final Image** to save a properly proportioned file (with optional 90-degree rotation) that you can print and apply to your physical cards[cite: 1].
+1. **Open the Provisioner:** Launch the provisioning tool from the main menu or GUI.
+2. **Launch the Editor:** Right-click on any game in the visual grid and select **🎨 Create Card Art**.
+3. **Design:** The editor allows you to overlay the official Steam capsule art onto custom backgrounds, adjust padding and border colors, and tweak the contrast or zoom to fit your style. 
+4. **Export:** Once you are happy with the layout, click **Export Final Image** to save a properly proportioned file (with optional 90-degree rotation) that you can print and apply to your physical cards.
 
 ## ⚙️ Configuration Files (TOML Formats)
 
@@ -106,16 +106,16 @@ uid = "04-83-D5-1E-46-02-89"
 ```
 
 ### `box_art_config.toml`
-This file saves your layout preferences for the integrated Card Art Editor[cite: 1]. It stores everything from canvas dimensions to cropping parameters.
+This file saves your layout preferences for the integrated Card Art Editor. It stores everything from canvas dimensions to cropping parameters.
 
-*   `background_image`: Path to the background asset[cite: 2].
-*   `width` / `height`: The core canvas dimensions for your final output[cite: 1, 2].
-*   `left_right_pad`, `top_pad`, `bottom_pad`: Inner padding values that push the game cover inward to create a border inset[cite: 1, 2].
-*   `card_border_color` / `border_width`: Styling for the frame around the game cover[cite: 1, 2].
-*   `crop_top`, `crop_bottom`, `crop_left`, `crop_right`: Art cropping coordinates[cite: 1, 2].
-*   `bg_contrast` / `card_contrast`: Image contrast percentage (default 100)[cite: 1, 2].
-*   `zoom`: Scale ratio for the game cover (default 100)[cite: 1, 2].
-*   `rotate_90`: Boolean value to rotate the final image on export[cite: 1, 2].
+*   `background_image`: Path to the background asset.
+*   `width` / `height`: The core canvas dimensions for your final output.
+*   `left_right_pad`, `top_pad`, `bottom_pad`: Inner padding values that push the game cover inward to create a border inset.
+*   `card_border_color` / `border_width`: Styling for the frame around the game cover.
+*   `crop_top`, `crop_bottom`, `crop_left`, `crop_right`: Art cropping coordinates.
+*   `bg_contrast` / `card_contrast`: Image contrast percentage (default 100).
+*   `zoom`: Scale ratio for the game cover (default 100).
+*   `rotate_90`: Boolean value to rotate the final image on export.
 
 **Example:**
 ```toml
@@ -138,10 +138,10 @@ rotate_90 = true
 ```
 
 ### `steam_ignore.toml`
-This file is generated automatically when you hide specific apps (like test servers or software tools) from your Steam library in the provisioner[cite: 8].
+This file is generated automatically when you hide specific apps (like test servers or software tools) from your Steam library in the provisioner.
 
-*   `id`: The Steam AppID of the ignored game[cite: 8].
-*   `name`: The name of the ignored game[cite: 8].
+*   `id`: The Steam AppID of the ignored game.
+*   `name`: The name of the ignored game.
 
 **Example:**
 ```toml
@@ -153,19 +153,19 @@ name = "Cyberpunk 2077"
 ## ❓ Frequently Asked Questions (FAQ)
 
 **Do I need to format my NFC cards or write data to them?**
-No, formatting or writing is completely unnecessary. The application bypasses the writable memory of the card entirely and sends a raw PC/SC command (`FF CA 00 00 00`) to read the card's unique, read-only hardware UID[cite: 3, 8]. Because of this, even locked, unformatted, or "read-only" tags will work perfectly.
+No, formatting or writing is completely unnecessary. The application bypasses the writable memory of the card entirely and sends a raw PC/SC command (`FF CA 00 00 00`) to read the card's unique, read-only hardware UID. Because of this, even locked, unformatted, or "read-only" tags will work perfectly.
 
 **Why did my game fail to launch when I tapped a card?**
-The launcher has a built-in safety check to prevent system lockups. Before executing a launch command, it checks the Windows Registry (`RunningAppId`) to see if a Steam game is already running[cite: 3]. If a game is active, the launch is blocked[cite: 3]. Close your current game and tap the card again.
+The launcher has a built-in safety check to prevent system lockups. Before executing a launch command, it checks the Windows Registry (`RunningAppId`) to see if a Steam game is already running. If a game is active, the launch is blocked. Close your current game and tap the card again.
 
 **Why aren't my installed games showing up in the Provisioning menu?**
-The provisioner locates games by finding your main Steam installation via the Windows Registry, and then reading your `libraryfolders.vdf` file to locate secondary installation drives[cite: 8]. It then scans those drives for `appmanifest_*.acf` files[cite: 8]. If your Steam installation is highly customized or registry keys are missing, it may fail to locate some secondary libraries.
+The provisioner locates games by finding your main Steam installation via the Windows Registry, and then reading your `libraryfolders.vdf` file to locate secondary installation drives. It then scans those drives for `appmanifest_*.acf` files. If your Steam installation is highly customized or registry keys are missing, it may fail to locate some secondary libraries.
 
 **Can I hide games I don't want to see in the Provisioner?**
-Yes. In the Provisioning GUI, right-click any game and select **🚫 Ignore Game**[cite: 8]. This will add the game to your `steam_ignore.toml` file so it won't clutter your grid in the future[cite: 8]. You can un-ignore games the same way if you change your mind[cite: 8].
+Yes. In the Provisioning GUI, right-click any game and select **🚫 Ignore Game**. This will add the game to your `steam_ignore.toml` file so it won't clutter your grid in the future. You can un-ignore games the same way if you change your mind.
 
 **What happens if I accidentally assign a game to a card that is already in use?**
-The system handles this gracefully. During provisioning, it checks the UID against your existing `card_config.toml`[cite: 8]. If it finds a match, it will simply update that specific entry with the new game's data rather than creating a duplicate or breaking the file[cite: 8].
+The system handles this gracefully. During provisioning, it checks the UID against your existing `card_config.toml`. If it finds a match, it will simply update that specific entry with the new game's data rather than creating a duplicate or breaking the file.
 
 ## 🔮 Roadmap
 Currently, Crosyns Card Launcher natively supports Steam integration. Future updates are planned to include:
