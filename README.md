@@ -46,6 +46,18 @@ Crosyn's Note: Yeah, I used A.I. to help with a large part of this project. if y
 
 ## 🏁 Getting Started
 
+You can run Crosyns Card Launcher either as a standalone portable application (no installation required) or directly from the Python source code.
+
+### 📦 Option 1: Quick Start (Portable Release)
+*Recommended for most users.*
+
+1. **Download:** Navigate to the **Releases** tab on GitHub and download the latest `Crosyns_Card_Launcher_Portable_v_x_y_z.zip` file.
+2. **Extract:** Unzip the downloaded file into a folder of your choice (e.g., your Desktop or Documents).
+3. **Run:** Open the extracted folder and double-click `Crosyns_Card_Launcher_Portable.exe` to start the application. That's it!
+
+### 🐍 Option 2: Running from Source
+*For developers or those who want to modify the code.*
+
 ### Prerequisites
 *   **Python:** Python 3.11 or higher is recommended to take advantage of native `tomllib` support.
 *   **Hardware:** A PC/SC compliant USB NFC Reader (such as the WCR330).
