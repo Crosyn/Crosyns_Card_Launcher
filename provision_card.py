@@ -24,7 +24,8 @@ except ImportError:
     import pip._vendor.tomli as tomllib
 
 # Force standard output to handle UTF-8 characters (like emojis)
-sys.stdout.reconfigure(encoding='utf-8')
+if sys.stdout is not None:
+    sys.stdout.reconfigure(encoding='utf-8')
 
 CONFIG_FILE_PATH = Path("card_config.toml")
 IGNORE_FILE_PATH = Path("steam_ignore.toml")

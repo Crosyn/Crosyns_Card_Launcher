@@ -37,8 +37,15 @@ def load_game_cards(config_path: Path) -> dict:
     """
     if not config_path.exists():
         print(f"❌ Error: Configuration file not found at {config_path}")
-        print("Please ensure your config.toml exists in the same directory.")
-        sys.exit(1)
+        try:
+            # Create a blank TOML file with a helpful comment
+            config_path.write_text("# Auto-generated card configuration file\n", encoding="utf-8")
+            print(f"⚙️ Created new file at {config_path}")
+        except Exception as e:
+            print(f"❌ Failed to generate config file: {e}")
+        
+        # Return an empty map so the app doesn't crash
+        return {}
 
     try:
         with open(config_path, "rb") as f:

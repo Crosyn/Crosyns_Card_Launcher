@@ -14,12 +14,19 @@ import pystray
 import ctypes
 from PIL import Image, ImageTk
 
+# Import custom files
+import splash
+import provision_card
+import art_editor
+from cmdline_launcher import display_menu
+
 # Import existing logic directly from card_commands.py
 from card_commands import load_game_cards, TomlCardLauncherObserver, CONFIG_FILE_PATH
 from smartcard.CardMonitoring import CardMonitor
 
 # Force standard output to handle UTF-8 characters
-sys.stdout.reconfigure(encoding='utf-8')
+if sys.stdout is not None:
+    sys.stdout.reconfigure(encoding='utf-8')
 
 ctk.set_appearance_mode("System")  
 ctk.set_default_color_theme("blue")
@@ -266,6 +273,43 @@ def ensure_single_instance():
     return mutex
 
 if __name__ == "__main__":
+    # --- THE ROUTER ---
+    # Check if the exe is being called with arguments by one of your subprocesses
+    if len(sys.argv) > 1:
+        script_target = sys.argv[1]
+        
+        if script_target == "splash.py":
+            splash.show_splash(sys.argv[2])
+            sys.exit(0)
+            
+        elif script_target == "provision_card.py":
+            # Pass the --gui flag logic manually
+            if "--gui" in sys.argv:
+                provision_card.run_gui()
+            else:
+                provision_card.run_cli()
+            sys.exit(0)
+            
+        elif script_target == "art_editor.py":
+            # Extract arguments for the art editor
+            import argparse
+            parser = argparse.ArgumentParser()
+            parser.add_argument("script_name") # Catches 'art_editor.py'
+            parser.add_argument("--id", required=True)
+            parser.add_argument("--name", required=True)
+            parser.add_argument("--cover", required=True)
+            args, unknown = parser.parse_known_args()
+            
+            app = art_editor.ArtEditor(args.id, args.name, args.cover)
+            app.mainloop()
+            sys.exit(0)
+            
+        elif script_target == "cmdline_launcher.py":
+            display_menu()
+            sys.exit(0)
+
+    # --- MAIN LAUNCHER ---
+    # If no arguments are passed, run the normal GUI launcher
     app_mutex = ensure_single_instance()
     app = CrosynsCardLauncherApp()
     app.mainloop()
