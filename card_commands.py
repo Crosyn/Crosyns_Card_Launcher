@@ -139,8 +139,14 @@ class TomlCardLauncherObserver(CardObserver):
             print("👋 Card removed from reader surface.")
 
     def steam_card(self, card_name, card_cmd):
+        import provision_card
+
+        # Locate the image in the card_covers directory
+        image_path = Path("card_covers") / f"{card_cmd}.jpg"
+        if not image_path.exists():
+            provision_card.download_cover_art(card_cmd, card_name, Path("card_covers"))
         # Fire off the splash screen script asynchronously 
-        subprocess.Popen([sys.executable, "splash.py", str(card_cmd)])
+        subprocess.Popen([sys.executable, "splash.py", str(card_cmd), str(card_name)])
         
         # Triggers the Windows default URI handler for Steam
         subprocess.run(

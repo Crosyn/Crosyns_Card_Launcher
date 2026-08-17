@@ -279,7 +279,9 @@ if __name__ == "__main__":
         script_target = sys.argv[1]
         
         if script_target == "splash.py":
-            splash.show_splash(sys.argv[2])
+            # sys.argv[2] is the cmd_id, sys.argv[3] is the game_name
+            game_name = sys.argv[3] if len(sys.argv) > 3 else f"AppID: {sys.argv[2]}"
+            splash.show_splash(sys.argv[2], game_name)
             sys.exit(0)
             
         elif script_target == "provision_card.py":
