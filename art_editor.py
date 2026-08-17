@@ -59,22 +59,22 @@ class ArtEditor(ctk.CTk):
         
         # Default config fallback
         self.config = {
-            "background_image": "",
-            "width": 170,
-            "height": 260,
-            "left_right_pad": 10,
-            "top_pad": 15,
-            "bottom_pad": 15,
-            "card_border_color": "#2ECC71",
-            "border_width": 4,
+            "background_image": "assets/default_background.png",
+            "width": 200,
+            "height": 350,
+            "left_right_pad": 21,
+            "top_pad": 40,
+            "bottom_pad": 70,
+            "card_border_color": "#000000",
+            "border_width": 2,
             "crop_top": 0,
             "crop_bottom": 0,
             "crop_left": 0,
             "crop_right": 0,
-            "bg_contrast": 100,
-            "card_contrast": 100,
+            "bg_contrast": 125,
+            "card_contrast": 125,
             "zoom": 100,
-            "rotate_90": False
+            "rotate_90": True
         }
         self.load_config()
 

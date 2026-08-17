@@ -24,11 +24,58 @@ except ImportError:
     import pip._vendor.tomli as tomllib
 
 # Force standard output to handle UTF-8 characters (like emojis)
-sys.stdout.reconfigure(encoding='utf-8')
+if sys.stdout is not None:
+    sys.stdout.reconfigure(encoding='utf-8')
 
 CONFIG_FILE_PATH = Path("card_config.toml")
 IGNORE_FILE_PATH = Path("steam_ignore.toml")
 COVERS_DIR_PATH = Path("card_covers")
+APP_CONFIG_PATH = Path("app_config.toml")
+
+def load_app_config() -> dict:
+    """Loads the main application configuration, creating defaults if missing."""
+    if not APP_CONFIG_PATH.exists():
+        print(f"⚠️ {APP_CONFIG_PATH} not found. Generating default application settings.")
+        default_toml = (
+            "# Auto-generated application configuration file\n"
+            "pv_hide_vr = true\n"
+            "pv_hide_server = true\n"
+            "pv_hide_demo = true\n"
+        )
+        try:
+            APP_CONFIG_PATH.write_text(default_toml, encoding="utf-8")
+        except Exception as e:
+            print(f"❌ Failed to generate {APP_CONFIG_PATH}: {e}")
+            
+        # Return the defaults immediately so the application can keep running
+        return {
+            "pv_hide_vr": True,
+            "pv_hide_server": True,
+            "pv_hide_demo": True
+        }
+
+    try:
+        with open(APP_CONFIG_PATH, "rb") as f:
+            return tomllib.load(f)
+    except Exception as e:
+        print(f"❌ Failed parsing {APP_CONFIG_PATH}: {e}")
+        return {
+            "pv_hide_vr": True,
+            "pv_hide_server": True,
+            "pv_hide_demo": True
+        }
+
+def save_app_config(file_path: Path, settings: dict):
+    """Saves the current application settings to the TOML file."""
+    toml_output = (
+        f"pv_hide_vr = {str(settings.get('pv_hide_vr', True)).lower()}\n"
+        f"pv_hide_server = {str(settings.get('pv_hide_server', True)).lower()}\n"
+        f"pv_hide_demo = {str(settings.get('pv_hide_demo', True)).lower()}\n"
+    )
+    try:
+        file_path.write_text(toml_output, encoding="utf-8")
+    except Exception as e:
+        print(f"❌ Failed to save app config: {e}")
 
 def load_ignored_games(file_path: Path) -> dict:
     """Reads the ignore list and returns a dictionary of {id: name}."""
@@ -318,6 +365,9 @@ def run_cli():
 def run_gui():
     import customtkinter as ctk 
 
+    # Load app configurations
+    app_settings = load_app_config()
+
     ctk.set_appearance_mode("System")
     ctk.set_default_color_theme("blue")
 
@@ -410,6 +460,20 @@ def run_gui():
     hide_assigned_var = ctk.BooleanVar(value=True)
     hide_ignored_var = ctk.BooleanVar(value=True)
 
+    # Initialize variables using the loaded TOML config
+    pv_hide_vr_var = ctk.BooleanVar(value=app_settings.get("pv_hide_vr", True))
+    pv_hide_server_var = ctk.BooleanVar(value=app_settings.get("pv_hide_server", True))
+    pv_hide_demo_var = ctk.BooleanVar(value=app_settings.get("pv_hide_demo", True))
+
+    def on_config_toggle():
+        """Updates the settings dictionary, saves to TOML, and refreshes the grid."""
+        app_settings["pv_hide_vr"] = pv_hide_vr_var.get()
+        app_settings["pv_hide_server"] = pv_hide_server_var.get()
+        app_settings["pv_hide_demo"] = pv_hide_demo_var.get()
+        
+        save_app_config(APP_CONFIG_PATH, app_settings)
+        update_grid()
+
     # Note: We must define update_grid BEFORE we bind it to the checkbox commands
     
     grid_frame = ctk.CTkScrollableFrame(app, width=800, height=400)
@@ -431,6 +495,15 @@ def run_gui():
         filtered_games = []
         for g in games_list:
             if search_query not in g['name'].lower():
+                continue
+                
+            # Text-based filtering checks
+            game_name_lower = g['name'].lower()
+            if pv_hide_vr_var.get() and "VR" in g['name']: # Capital 'VR' exact match
+                continue
+            if pv_hide_server_var.get() and "server" in game_name_lower:
+                continue
+            if pv_hide_demo_var.get() and "demo" in game_name_lower:
                 continue
                 
             is_ignored = str(g['id']) in ignored_games
@@ -511,6 +584,16 @@ def run_gui():
 
     chk_hide_ignored = ctk.CTkCheckBox(filters_frame, text="Hide Ignored", variable=hide_ignored_var, command=update_grid)
     chk_hide_ignored.pack(side="left", padx=10)
+
+    # Config-bound checkboxes
+    chk_hide_vr = ctk.CTkCheckBox(filters_frame, text="Hide VR", variable=pv_hide_vr_var, command=on_config_toggle)
+    chk_hide_vr.pack(side="left", padx=10)
+
+    chk_hide_server = ctk.CTkCheckBox(filters_frame, text="Hide Server", variable=pv_hide_server_var, command=on_config_toggle)
+    chk_hide_server.pack(side="left", padx=10)
+
+    chk_hide_demo = ctk.CTkCheckBox(filters_frame, text="Hide Demo", variable=pv_hide_demo_var, command=on_config_toggle)
+    chk_hide_demo.pack(side="left", padx=10)
 
     search_var.trace_add("write", update_grid)
 

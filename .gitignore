@@ -218,3 +218,6 @@ __marimo__/
 .streamlit/secrets.toml
 /steam_ignore.toml
 /card_config.toml
+/assets/icon.ico
+/card_covers
+/app_config.toml
